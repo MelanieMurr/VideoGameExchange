@@ -62,14 +62,34 @@ export class UsersService {
     }
 
     public async update(id: number, userCreationParams: Partial<UserCreationParams>): Promise<UserPublic> {
-        throw new Error("Not implemented");
+        const db = createDbConnection();
+        const [result] = await db.update(users)
+            .set({ name: userCreationParams.name, email: userCreationParams.email, address: userCreationParams.address, password: userCreationParams.password })
+            .where(eq(users.id, id)).returning();
+        return {
+            id: result.id,
+            name: result.name,
+            email: result.email,
+            address: result.address
+        }
     }
 
     public async replace(id: number, userCreationParams: UserCreationParams): Promise<UserPublic> {
-        throw new Error("Not implemented");
+        const db = createDbConnection();
+        const [result] = await db.update(users)
+            .set({ name: userCreationParams.name, email: userCreationParams.email, address: userCreationParams.address, password: userCreationParams.password })
+            .where(eq(users.id, id)).returning();
+
+        return {
+            id: result.id,
+            name: result.name,
+            email: result.email,
+            address: result.address
+        }
     }
 
     public async delete(id: number) {
-
+        const db = createDbConnection();
+        await db.delete(users).where(eq(users.id, id));
     }
 }

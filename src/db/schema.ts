@@ -11,5 +11,9 @@ export const users = pgTable("users", {
 export const games = pgTable("games", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     name: varchar({ length: 255 }).notNull(),
-    userId: integer("user_id").notNull().references(() => users.id)
-})
+    userId: integer("user_id").notNull().references(() => users.id),
+    publisher: varchar({ length: 255 }).notNull(),
+    publishYear: integer("publish_year").notNull(),
+    sys: varchar({ length: 255 }).notNull(),
+    condition: varchar({ length: 4 }).notNull(),
+});

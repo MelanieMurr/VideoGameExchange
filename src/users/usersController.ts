@@ -12,6 +12,8 @@ import {
     Patch,
 } from "tsoa";
 import {UsersService, UserCreationParams, UserPublic} from "./usersService";
+import {GameCreationParams, GameService} from "../games/gamesService";
+import {Game} from "../games/game";
 
 
 @Route("users")
@@ -64,4 +66,14 @@ export class UsersController extends Controller {
     ): Promise<UserPublic> {
         return new UsersService().update(userId, requestBody);
     }
+
+    @Post("{userId}/games")
+    public async addGameToUser(
+        @Path() userId: number,
+        @Body() requestBody: GameCreationParams
+    ): Promise<Game> {
+        return new GameService().create(userId, requestBody);
+    }
+    // users/userId/games, users/userId/games/gameId etc
+    // reference GamesService instead of UsersService
 }
