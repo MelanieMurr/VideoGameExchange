@@ -1,6 +1,6 @@
 services:
   kafka:
-    image: confluence/cp-kafka:latest
+    image: confluentinc/cp-kafka:latest
     ports:
       - "9092:9092"
     environment:
@@ -35,6 +35,7 @@ services:
     environment:
       KAFKA_BROKERS: "kafka:9092"
       NOTIFY_TOPIC: "email-notifications"
+      DATABASE_URL: "postgres://postgres:myPassWord@postgres:5432/videogameexchange"
     depends_on:
       - kafka
 
@@ -43,6 +44,7 @@ services:
     environment:
       KAFKA_BROKERS: "kafka:9092"
       NOTIFY_TOPIC: "email-notifications"
+      DATABASE_URL: "postgres://postgres:myPassWord@postgres:5432/videogameexchange"
     depends_on:
       - kafka
   nginx:
