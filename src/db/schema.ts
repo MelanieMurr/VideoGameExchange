@@ -15,7 +15,7 @@ export const games = pgTable("games", {
     publisher: varchar({ length: 255 }).notNull(),
     publishYear: integer("publish_year").notNull(),
     sys: varchar({ length: 255 }).notNull(),
-    condition: varchar({ length: 4 }).notNull(),
+    condition: varchar({ length: 16 }).notNull(),
 });
 
 export const offers = pgTable("offers", {

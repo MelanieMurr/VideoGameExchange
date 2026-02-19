@@ -115,6 +115,10 @@ export class UsersController extends Controller {
         @Path() userId: number,
     ): Promise<UserPublicLinks> {
         const user = await new UsersService().update(userId, requestBody);
+        if (!requestBody || Object.keys(requestBody).length === 0) {
+            this.setStatus(400);
+            return { error: "No fields provided to update." } as any;
+        }
         return {
             ...user,
             _links: {
