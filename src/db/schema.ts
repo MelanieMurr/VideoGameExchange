@@ -1,4 +1,4 @@
-import { integer, pgTable, varchar, text } from "drizzle-orm/pg-core";
+import { integer, pgTable, varchar, text, timestamp } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
@@ -17,3 +17,15 @@ export const games = pgTable("games", {
     sys: varchar({ length: 255 }).notNull(),
     condition: varchar({ length: 4 }).notNull(),
 });
+
+export const offers = pgTable("offers", {
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    requesterUserId: integer("requester_user_id").notNull().references(() => users.id),
+    ownerUserId: integer("owner_user_id").notNull().references(() => users.id),
+    offeredGameId: integer("offered_game_id").notNull().references(() => games.id),
+    requestedGameId: integer("requested_game_id").notNull().references(() => games.id),
+    status: varchar({ length: 16 }).notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+

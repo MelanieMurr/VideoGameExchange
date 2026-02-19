@@ -5,13 +5,14 @@
   "scripts": {
     "dev": "concurrently \"nodemon\" \"nodemon -x tsoa spec-and-routes\"",
     "build": "tsoa spec-and-routes && tsc",
-    "start": "node build/serc/server.js",
+    "start": "node build/src/server.js",
     "db-migrate": "drizzle-kit push",
     "db-studio": "drizzle-kit studio"
   },
   "author": "Melanie Murray <melaniemurr13@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@tsoa/runtime": "^7.0.0-alpha.0",
     "dotenv": "^17.2.3",
     "drizzle-orm": "^0.45.1",
     "express": "^5.2.1",
@@ -26,7 +27,7 @@
     "@types/pg": "^8.16.0",
     "@types/swagger-ui-express": "^4.1.8",
     "concurrently": "^9.2.1",
-    "drizzle-kit": "^0.31.8",
+    "drizzle-kit": "^0.31.9",
     "nodemon": "^3.1.11",
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
