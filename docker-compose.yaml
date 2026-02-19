@@ -1,4 +1,24 @@
 services:
+  kafka:
+    image: confluence/cp-kafka:latest
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: "broker,controller"
+      KAFKA_CONTROLLER_QUORUM_VOTERS: "1@kafka:9093"
+      KAFKA_CONTROLLER_LISTENER_NAMES: "CONTROLLER"
+      KAFKA_LISTENERS: "PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093"
+      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:9092"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT,CONTROLLER:PLAINTEXT"
+      KAFKA_INTER_BROKER_LISTENER_NAME: "PLAINTEXT"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      CLUSTER_ID: "MkU3OEVBNTcwNTJENDM2Qk"
+    volumes:
+      - kafka_data:/var/lib/kafka/data
   postgres:
     image: postgres:latest
     restart: always
@@ -12,9 +32,19 @@ services:
       - postgres_data:/var/lib/postgresql
   api1:
     build: .
+    environment:
+      KAFKA_BROKERS: "kafka:9092"
+      NOTIFY_TOPIC: "email-notifications"
+    depends_on:
+      - kafka
 
   api2:
     build: .
+    environment:
+      KAFKA_BROKERS: "kafka:9092"
+      NOTIFY_TOPIC: "email-notifications"
+    depends_on:
+      - kafka
   nginx:
     image: nginx:latest
     volumes:
@@ -25,6 +55,16 @@ services:
       - api1
       - api2
 
+  notifier:
+    build: .
+    command: [ "node", "build/src/notifier.js" ]
+    environment:
+      KAFKA_BROKERS: "kafka:9092"
+      NOTIFY_TOPIC: "email_notifications"
+    depends_on:
+      - kafka
+
 
 volumes:
   postgres_data:
+  kafka_data:
