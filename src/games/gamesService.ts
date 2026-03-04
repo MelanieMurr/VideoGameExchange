@@ -31,7 +31,7 @@ export class GameService {
         const rows = await db.select()
             .from(games)
             .where(and(eq(games.id, id), eq(games.userId, userId)));
-        if (!rows) {
+        if (rows.length == 0) {
             return null;
         }
         const game = rows[0];

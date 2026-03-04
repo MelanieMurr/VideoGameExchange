@@ -20,4 +20,3 @@ export async function enqueueNotification(event: NotificationEvent) {
         messages: [{ value: JSON.stringify(event) }],
     });
 }
-

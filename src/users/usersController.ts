@@ -99,6 +99,10 @@ export class UsersController extends Controller {
         @Path() userId: number,
     ): Promise<UserPublicLinks> {
         const user = await new UsersService().replace(userId, requestBody);
+        if (!user) {
+            this.setStatus(404);
+            return { error: "User not found." } as any;
+        }
         return {
             ...user,
             _links: {
@@ -120,6 +124,10 @@ export class UsersController extends Controller {
         }
 
         const user = await new UsersService().update(userId, requestBody);
+        if (!user) {
+            this.setStatus(404);
+            return { error: "User not found." } as any;
+        }
 
         return {
             ...user,

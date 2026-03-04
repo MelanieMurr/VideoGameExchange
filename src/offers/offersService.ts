@@ -57,4 +57,12 @@ export class OffersService {
         });
         return updatedOffer as Offer;
     }
+
+    public async listForOwner(ownerUserId: number, status?: OfferStatus): Promise<Offer[]> {
+        const db = createDbConnection();
+        const rows = await db.select()
+            .from(offers)
+            .where(and(eq(offers.ownerUserId, ownerUserId), status ? eq(offers.status, status) : undefined));
+        return rows as Offer[];
+    }
 }

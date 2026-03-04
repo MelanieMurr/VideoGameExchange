@@ -12,7 +12,7 @@ export class UsersService {
         const rows = await db.select()
             .from(users)
             .where(eq(users.id, id));
-        if(!rows) {
+        if(rows.length == 0) {
             return null;
         }
         const user = rows[0];
@@ -61,11 +61,14 @@ export class UsersService {
         }
     }
 
-    public async update(id: number, userCreationParams: Partial<UserCreationParams>): Promise<UserPublic> {
+    public async update(id: number, userCreationParams: Partial<UserCreationParams>): Promise<UserPublic | null> {
         const db = createDbConnection();
         const [result] = await db.update(users)
             .set({ name: userCreationParams.name, email: userCreationParams.email, address: userCreationParams.address, password: userCreationParams.password })
             .where(eq(users.id, id)).returning();
+        if (!result) {
+            return null;
+        }
         return {
             id: result.id,
             name: result.name,
@@ -74,11 +77,14 @@ export class UsersService {
         }
     }
 
-    public async replace(id: number, userCreationParams: UserCreationParams): Promise<UserPublic> {
+    public async replace(id: number, userCreationParams: UserCreationParams): Promise<UserPublic | null> {
         const db = createDbConnection();
         const [result] = await db.update(users)
             .set({ name: userCreationParams.name, email: userCreationParams.email, address: userCreationParams.address, password: userCreationParams.password })
             .where(eq(users.id, id)).returning();
+        if (!result) {
+            return null;
+        }
 
         return {
             id: result.id,
